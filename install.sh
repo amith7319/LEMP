@@ -4,7 +4,6 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 yum update -y
-yum upgrade -y
 yum install wget epel-release curl nano -y
 if [ ! -x /usr/sbin/nginx ];
     then
@@ -17,15 +16,16 @@ systemctl start mariadb && systemctl enable mariadb
 VERSION=`mysql -V |awk '{print $5}' |sed "s/-[[:alpha:]].*$//"`
 if [ -z "`mysql -V |grep -i mariadb`" ]; then # There is MySQL server
  if [[ "$VERSION" > "5.6.9" ]]; then 
-    NEW=1
+    echo "MYSQL is NEWEST
     else
-    NEW=0
+    echo "MYSQL need to upgraded
+    yum -y upgrade
  fi
 else # There is MariaDB server 10.4
  if [[ "$VERSION" > "10.4" ]]; then 
-    NEW=1
+    echo "MARIADB is NEWEST
     else
-    NEW=0
+    echo "MARIADB need to upgraded
     yum -y upgrade 
  fi
 fi
