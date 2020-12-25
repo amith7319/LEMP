@@ -5,17 +5,6 @@ if [[ $EUID -ne 0 ]]; then
 fi
 yum update -y
 yum install wget epel-release curl nano -y
-if [ ! -x /usr/sbin/nginx ];
-    then
-        echo "NGINX will be INSTALLED now"
-        yum install nginx -y
-        systemctl start nginx
-        systemctl enable nginx
-    else
-        echo #############################################################################
-        echo "NGINX is already INSTALLED"
-        echo #############################################################################
-fi
 
 ## Installing Mariadb
 
@@ -29,19 +18,35 @@ if [ ! -x /usr/bin/mysql ];
       echo #############################################################################
       echo "MARIADB is already INSTALLED"
       echo #############################################################################
+      exit 1
 fi
 password=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 20 | head -n 1)
 echo Mysql root password = $password > /root/LEMPpassword.txt
-#mysql_secure_installation <<EOF
-#
-#y
-#$password
-#$password
-#y
-#n
-#y
-#y
-#EOF
+mysql_secure_installation <<EOF
+
+y
+$password
+$password
+y
+n
+y
+y
+EOF
+
+# Installing Nginx
+
+if [ ! -x /usr/sbin/nginx ];
+    then
+        echo "NGINX will be INSTALLED now"
+        yum install nginx -y
+        systemctl start nginx
+        systemctl enable nginx
+    else
+        echo #############################################################################
+        echo "NGINX is already INSTALLED"
+        echo #############################################################################
+fi
+
 
 ## Installing PHP
 
