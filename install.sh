@@ -35,14 +35,18 @@ EOF
 
 ## Installing PHP
 
-yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y
-yum --disablerepo="*" --enablerepo="remi-safe" list php[7-9][0-9].x86_64 |grep php
-echo #############################################################################
-read -p "Select one PHP version from above...like php70,php71,php80  " phpv
-echo #############################################################################
-yum-config-manager --enable remi-$phpv
-yum install php php-common php-mbstring php-gd php-intl php-xml php-json php-mysqlnd php-fpm -y
-
+if [ ! -x /usr/bin/php ];
+   then
+      yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y
+      yum --disablerepo="*" --enablerepo="remi-safe" list php[7-9][0-9].x86_64 |grep php
+      echo #############################################################################
+      read -p "Select one PHP version from above...like php70,php71,php80  " phpv
+      echo #############################################################################
+      yum-config-manager --enable remi-$phpv
+      yum install php php-common php-mbstring php-gd php-intl php-xml php-json php-mysqlnd php-fpm -y
+   else
+      echo "PHP is already installed"
+fi
 sed 's/user = apache/user = nginx/g' /etc/php-fpm.d/www.conf
 sed 's/group = apache/group = nginx/g' /etc/php-fpm.d/www.conf
 systemctl restart php-fpm
