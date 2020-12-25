@@ -65,8 +65,11 @@ if [ ! -x /usr/bin/php ];
       echo "PHP is already installed"
       echo #############################################################################
 fi
-#sed 's/user = apache/user = nginx/g' /etc/php-fpm.d/www.conf
-#sed 's/group = apache/group = nginx/g' /etc/php-fpm.d/www.conf
+
+#Changing PHP-FPM according to Nginx
+
+sed -i's/user = apache/user = nginx/g' /etc/php-fpm.d/www.conf
+sed -i 's/group = apache/group = nginx/g' /etc/php-fpm.d/www.conf
 systemctl restart php-fpm
 
 
