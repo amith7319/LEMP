@@ -12,11 +12,13 @@ if [ ! -x /usr/sbin/nginx ];
         systemctl start nginx
         systemctl enable nginx
     else
+        echo #############################################################################
         echo "NGINX is already INSTALLED"
+        echo #############################################################################
 fi
 
 ## Installing Mariadb
-/usr/bin/mysql
+
 if [ ! -x /usr/bin/mysql ];
    then
       echo "MARIADB will be INSTALLED now"
@@ -24,7 +26,9 @@ if [ ! -x /usr/bin/mysql ];
       systemctl start mariadb
       systemctl enable mariadb
    else
+      echo #############################################################################
       echo "MARIADB is already INSTALLED"
+      echo #############################################################################
 fi
 password=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 20 | head -n 1)
 echo Mysql root password = $password > /root/LEMPpassword.txt
@@ -52,7 +56,9 @@ if [ ! -x /usr/bin/php ];
       yum-config-manager --enable remi-$phpv
       yum install php php-common php-mbstring php-gd php-intl php-xml php-json php-mysqlnd php-fpm -y
    else
+      echo #############################################################################
       echo "PHP is already installed"
+      echo #############################################################################
 fi
 #sed 's/user = apache/user = nginx/g' /etc/php-fpm.d/www.conf
 #sed 's/group = apache/group = nginx/g' /etc/php-fpm.d/www.conf
