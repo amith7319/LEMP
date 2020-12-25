@@ -43,5 +43,8 @@ echo ###########################################################################
 yum-config-manager --enable remi-$phpv
 yum install php php-common php-mbstring php-gd php-intl php-xml php-json php-mysqlnd php-fpm -y
 
+sed 's/user = apache/user = nginx/g' /etc/php-fpm.d/www.conf
+sed 's/group = apache/group = nginx/g' /etc/php-fpm.d/www.conf
+systemctl restart php-fpm
 
 
