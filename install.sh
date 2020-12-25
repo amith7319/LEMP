@@ -70,6 +70,8 @@ fi
 
 sed -i's/user = apache/user = nginx/g' /etc/php-fpm.d/www.conf
 sed -i 's/group = apache/group = nginx/g' /etc/php-fpm.d/www.conf
+sed -i 's/listen = 127.0.0.1:9000/listen = /var/run/php-fpm/php-fpm.sock;/g /etc/php-fpm.d/www.conf
 systemctl restart php-fpm
+
 
 
