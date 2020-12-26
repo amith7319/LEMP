@@ -11,10 +11,10 @@ This script utilises root user privileges.
 
 # Usage
 To download and run this script in a single command use the line below:
-# git clone https://github.com/amith7319/LEMP-Stack.git
-# cd LEMP-Stack
-# chmod +x install.sh
-# sh install.sh
+1. git clone https://github.com/amith7319/LEMP-Stack.git
+2. cd LEMP-Stack
+3. chmod +x install.sh
+4. sh install.sh
 
 # Note
 Password stored in /root/LEMPpassword.txt
