@@ -18,9 +18,9 @@ if [ ! -x /usr/bin/mysql ];
       systemctl start mariadb
       systemctl enable mariadb
    else
-      echo #############################################################################
+      echo -----------------------------------------------------------------------------
       echo "MARIADB is already INSTALLED"
-      echo #############################################################################
+      echo -----------------------------------------------------------------------------
       exit 1
 fi
 password=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 20 | head -n 1)
@@ -45,9 +45,9 @@ if [ ! -x /usr/sbin/nginx ];
         systemctl start nginx
         systemctl enable nginx
     else
-        echo #############################################################################
+        echo -----------------------------------------------------------------------------
         echo "NGINX is already INSTALLED"
-        echo #############################################################################
+        echo -----------------------------------------------------------------------------
 fi
 
 
@@ -58,15 +58,15 @@ if [ ! -x /usr/bin/php ];
       echo "PHP will be INSTALLED now"
       yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y
       yum --disablerepo="*" --enablerepo="remi-safe" list php[7-9][0-9].x86_64 |grep php
-      echo #############################################################################
+      echo -----------------------------------------------------------------------------
       read -p "Select one PHP version from above...like php70,php71,php80  " PHPV
-      echo #############################################################################
+      echo -----------------------------------------------------------------------------
       yum-config-manager --enable remi-$PHPV
       yum install php-fpm php-opcache php-cli php-gd php-curl php-mysql -y
    else
-      echo #############################################################################
+      echo -----------------------------------------------------------------------------
       echo "PHP is already installed"
-      echo #############################################################################
+      echo -----------------------------------------------------------------------------
 fi
 
 #Changing PHP-FPM according to Nginx
