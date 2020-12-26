@@ -62,7 +62,7 @@ if [ ! -x /usr/bin/php ];
       read -p "Select one PHP version from above...like php70,php71,php80  " PHPV
       echo -----------------------------------------------------------------------------
       yum-config-manager --enable remi-$PHPV
-      yum install php-fpm php-opcache php-cli php-gd php-curl php-mysql -y
+      yum install php php-fpm php-opcache php-cli php-gd php-curl php-mysql -y
    else
       echo -----------------------------------------------------------------------------
       echo "PHP is already installed"
