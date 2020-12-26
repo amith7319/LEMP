@@ -59,9 +59,9 @@ if [ ! -x /usr/bin/php ];
       yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y
       yum --disablerepo="*" --enablerepo="remi-safe" list php[7-9][0-9].x86_64 |grep php
       echo #############################################################################
-      read -p "Select one PHP version from above...like php70,php71,php80  " phpv
+      read -p "Select one PHP version from above...like php70,php71,php80  " PHPV
       echo #############################################################################
-      yum-config-manager --enable remi-$phpv
+      yum-config-manager --enable remi-$PHPV
       yum install php-fpm php-opcache php-cli php-gd php-curl php-mysql -y
    else
       echo #############################################################################
@@ -83,7 +83,8 @@ systemctl start php-fpm
 #Configuring TEST block NGINX
 
 IP=$(curl checkip.amazonaws.com)
-cat <<EOT /etc/nginx/conf.d/default.conf
+touch /etc/nginx/conf.d/default.conf
+cat > /etc/nginx/conf.d/default.conf << EOL
 server {
     listen       80;
     server_name  $IP $HOSTNAME;
@@ -109,15 +110,16 @@ server {
         include fastcgi_params;
     }
 }
-EOT
+EOL
 
-cat <<EOT /usr/share/nginx/html/info.php
+touch /usr/share/nginx/html/info.php
+cat > /usr/share/nginx/html/info.php << EOL
 <?php
 phpinfo();
 ?>
-EOT
+EOL
 
 systemctl restart nginx
 
 echo ...............................Finished...Installation....!!!
-echo " Visit....http://server_host_or_IP/info.php"
+echo " Visit....http://server_hostname_or_IP/info.php"
