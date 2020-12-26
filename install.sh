@@ -71,11 +71,12 @@ fi
 
 #Changing PHP-FPM according to Nginx
 
-sed -i 's/user = apache/user = nginx/g' /etc/php-fpm.d/www.conf
-sed -i 's/group = apache/group = nginx/g' /etc/php-fpm.d/www.conf
-sed -i 's#;listen.owner = apache#listen.owner = nginx#g' /etc/php-fpm.d/www.conf
-sed -i 's#;listen.group = apache#listen.group = nginx#g' /etc/php-fpm.d/www.conf
-sed -i 's#;listen = 127.0.0.1:9000#listen = /run/php-fpm/www.sock#g' /etc/php-fpm.d/www.conf
+sed -i 's|user = apache|user = nginx|g' /etc/php-fpm.d/www.conf
+sed -i 's|group = apache|group = nginx|g' /etc/php-fpm.d/www.conf
+sed -i 's|;listen.owner = apache|listen.owner = nginx|g' /etc/php-fpm.d/www.conf
+sed -i 's|;listen.group = apache|listen.group = nginx|g' /etc/php-fpm.d/www.conf
+sed -i 's|listen = 127.0.0.1:9000|listen = /run/php-fpm/www.sock|g' /etc/php-fpm.d/www.conf
+sed -i 's|;listen.mode = 0660|listen.mode = 0666'|g' /etc/php-fpm.d/www.conf
 chown -R root:nginx /var/lib/php
 systemctl enable php-fpm
 systemctl start php-fpm
@@ -112,7 +113,6 @@ server {
 }
 EOL
 
-touch /usr/share/nginx/html/info.php
 cat > /usr/share/nginx/html/info.php << EOL
 <?php
 phpinfo();
