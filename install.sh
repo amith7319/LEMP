@@ -62,7 +62,7 @@ if [ ! -x /usr/bin/php ];
       read -p "Select one PHP version from above...like php70,php71,php80  " phpv
       echo #############################################################################
       yum-config-manager --enable remi-$phpv
-      yum install php php-common php-mbstring php-gd php-intl php-xml php-json php-mysqlnd php-fpm -y
+      yum install php-fpm php-opcache php-cli php-gd php-curl php-mysql -y
    else
       echo #############################################################################
       echo "PHP is already installed"
@@ -75,7 +75,7 @@ sed -i 's/user = apache/user = nginx/g' /etc/php-fpm.d/www.conf
 sed -i 's/group = apache/group = nginx/g' /etc/php-fpm.d/www.conf
 sed -i 's/listen.owner = apache/listen.owner = nginx/g' /etc/php-fpm.d/www.conf
 sed -i 's/listen.group = apache/listen.group = nginx/g' /etc/php-fpm.d/www.conf
-sed -i 's/listen = 127.0.0.1:9000/listen = /run/php-fpm/www.sock/g' -- /etc/php-fpm.d/www.conf
+sed -i 's/;listen = 127.0.0.1:9000/listen = /run/php-fpm/www.sock/g' -- /etc/php-fpm.d/www.conf
 chown -R root:nginx /var/lib/php
 systemctl enable php-fpm
 systemctl start php-fpm
