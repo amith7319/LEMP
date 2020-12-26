@@ -112,4 +112,4 @@ EOL
 systemctl restart nginx
 
 echo ...............................Finished...Installation....!!!
-echo " Visit....http://server_hostname_or_IP/info.php"
+echo " Visit.... http://$IP/info.php"
