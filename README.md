@@ -12,3 +12,6 @@ This script utilises root user privileges.
 # Usage
 To download and run this script in a single command use the line below:
 
+# Note
+Password stored in /root/LEMPpassword.txt
+
