@@ -3,6 +3,9 @@ if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root"
    exit 1
 fi
+read -p "Enter the system hostname  " HOSTNAME
+hostnamectl set-hostname $HOSTNAME
+
 yum update -y
 yum install wget epel-release curl nano -y
 
@@ -70,8 +73,35 @@ fi
 
 sed -i's/user = apache/user = nginx/g' /etc/php-fpm.d/www.conf
 sed -i 's/group = apache/group = nginx/g' /etc/php-fpm.d/www.conf
-sed -i 's/127.0.0.1:9000//var/run/php-fpm/php-fpm.sock/g /etc/php-fpm.d/www.conf
+replace "127.0.0.1:9000" "/var/run/php-fpm/php-fpm.sock" -- /etc/php-fpm.d/www.conf
 systemctl restart php-fpm
 
+IP=$(curl checkip.amazonaws.com)
+cat <<EOT /etc/nginx/conf.d/default.conf
+server {
+    listen       80;
+    server_name  $IP $HOSTNAME;
 
+    root   /usr/share/nginx/html;
+    index index.php index.html index.htm;
 
+    location / {
+        try_files $uri $uri/ =404;
+    }
+    error_page 404 /404.html;
+    error_page 500 502 503 504 /50x.html;
+
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_pass unix:/var/run/php-fpm/php-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+}
+EOT
+ 
