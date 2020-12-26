@@ -3,7 +3,7 @@ if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root"
    exit 1
 fi
-read -p "Enter the system hostname  " HOSTNAME
+read -p "Enter the system hostname:  " HOSTNAME
 hostnamectl set-hostname $HOSTNAME
 
 yum update -y
@@ -71,10 +71,16 @@ fi
 
 #Changing PHP-FPM according to Nginx
 
-sed -i's/user = apache/user = nginx/g' /etc/php-fpm.d/www.conf
+sed -i 's/user = apache/user = nginx/g' /etc/php-fpm.d/www.conf
 sed -i 's/group = apache/group = nginx/g' /etc/php-fpm.d/www.conf
-replace "127.0.0.1:9000" "/var/run/php-fpm/php-fpm.sock" -- /etc/php-fpm.d/www.conf
-systemctl restart php-fpm
+sed -i 's/listen.owner = apache/listen.owner = nginx/g' /etc/php-fpm.d/www.conf
+sed -i 's/listen.group = apache/listen.group = nginx/g' /etc/php-fpm.d/www.conf
+sed -i 's/listen = 127.0.0.1:9000/listen = /run/php-fpm/www.sock/g' -- /etc/php-fpm.d/www.conf
+chown -R root:nginx /var/lib/php
+systemctl enable php-fpm
+systemctl start php-fpm
+
+#Configuring TEST block NGINX
 
 IP=$(curl checkip.amazonaws.com)
 cat <<EOT /etc/nginx/conf.d/default.conf
@@ -97,11 +103,21 @@ server {
 
     location ~ \.php$ {
         try_files $uri =404;
-        fastcgi_pass unix:/var/run/php-fpm/php-fpm.sock;
+        fastcgi_pass unix:/run/php-fpm/www.sock;
         fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         include fastcgi_params;
     }
 }
 EOT
- 
+
+cat <<EOT /usr/share/nginx/html/info.php
+<?php
+phpinfo();
+?>
+EOT
+
+systemctl restart nginx
+
+echo ...............................Finished...Installation....!!!
+echo " Visit....http://server_host_or_IP/info.php"
