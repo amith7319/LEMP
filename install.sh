@@ -113,3 +113,4 @@ systemctl restart nginx
 
 echo ...............................Finished...Installation....!!!
 echo " Visit.... http://$IP/info.php"
+echo "Password location: /root/LEMPpassword.txt"
